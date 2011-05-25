@@ -2,7 +2,7 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 creationComplete="appCreationCompleteHandler(event)">
+		 creationComplete="appCreationCompleteHandler(event)" xmlns:controls="com.adobe.controls.*">
 	<fx:Script>
 		<![CDATA[
 			import alternativa.engine3d.containers.ConflictContainer;
@@ -216,6 +216,19 @@
 				this.scene.cameraScaleFactor = this.cameraDepthSlider.value;
 			}
 			
+			/**
+			 * Change color of selected element.
+			 */
+			protected function colorPicker_changeHandler(event:IndexChangeEvent):void
+			{
+				if (!this.nodeList.selectedItem)
+				{
+					return;
+				}
+				this.scene.setColor(this.nodeList.selectedItem, this.colorPicker.selectedItem);
+				
+			}
+			
 		]]>
 	</fx:Script>
 
@@ -256,6 +269,10 @@
 			<s:List id="nodeList" dataProvider="{this.scene.nodes}" height="100%"
 					labelField="name"
 					change="nodeList_changeHandler(event)"/>
+			<controls:SparkColorPicker id="colorPicker" 
+									   skinClass="com.adobe.controls.ColorPickerListSkin"
+									   change="colorPicker_changeHandler(event)"
+									   enabled="{this.nodeList.selectedItem}"/>
 			<s:Button id="unselectButton" label="Unselect" 
 							click="unselectButtonClickHandler(event)"/>
 			<s:ToggleButton id="colladaToggleButton" selected="false"

@@ -9,6 +9,7 @@ package com.sinusgear.scenes
 	import alternativa.engine3d.loaders.ParserCollada;
 	import alternativa.engine3d.materials.FillMaterial;
 	import alternativa.engine3d.materials.TextureMaterial;
+	import alternativa.engine3d.objects.Mesh;
 	import alternativa.engine3d.primitives.Box;
 	
 	import flash.display.BitmapData;
@@ -86,6 +87,13 @@ package com.sinusgear.scenes
 			child.scaleY = this.scaleFactor;
 			child.scaleZ = this.scaleFactor;
 			
+		}
+		
+		public function setColor(child:Mesh, color:uint):void
+		{
+			var material:FillMaterial = new FillMaterial(color);
+			
+			child.setMaterialToAllFaces(material);
 		}
 		
 		

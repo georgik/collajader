@@ -1,0 +1,15 @@
+Collajader - Tool for simple testing of 3D objects
+
+Based on Flex and Alternativa 3D 7
+
+Web: http://georgik.sinusgear.com/tags/collajader
+
+
+Compilation in Flash Builder 4.5:
+1. Download Alternativa3D 7
+2. Put swc file into libs
+3. Build application
+
+
+
+

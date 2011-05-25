@@ -46,6 +46,7 @@ package com.sinusgear.scenes
 		public var vector:Vector3D = new Vector3D();
 		public var focusBox:Box;
 		
+		
 		public function init(event:Event):void
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -87,7 +88,8 @@ package com.sinusgear.scenes
 			
 		}
 		
-		public function controlObject(obj:Object3D):void
+		
+		public function set controlObject(obj:Object3D):void
 		{
 			this.controller.object = obj;
 		}

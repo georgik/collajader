@@ -1,4 +1,4 @@
-package
+package com.sinusgear.scenes
 {
 	import alternativa.engine3d.containers.ConflictContainer;
 	import alternativa.engine3d.controllers.SimpleObjectController;

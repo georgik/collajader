@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="HomeView" xmlns:app="com.sinusgear.app.*">
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Collajader" xmlns:app="com.sinusgear.app.*"
+		>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<app:CollajaderApp id="collajaderApp" width="100%" height="100%" />
+	
+	<s:Scroller width="100%" height="100%">
+		
+		<app:CollajaderApp id="collajaderApp" width="100%"  height="100%"
+						   currentState="collapsed"/>
+	</s:Scroller>
 </s:View>

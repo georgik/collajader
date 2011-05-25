@@ -2,7 +2,8 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 creationComplete="appCreationCompleteHandler(event)" xmlns:controls="com.adobe.controls.*">
+		 creationComplete="appCreationCompleteHandler(event)" xmlns:controls="com.adobe.controls.*"
+		 currentState="full">
 	<fx:Script>
 		<![CDATA[
 			import alternativa.engine3d.containers.ConflictContainer;
@@ -12,6 +13,7 @@
 			import alternativa.engine3d.materials.FillMaterial;
 			import alternativa.engine3d.primitives.Box;
 			
+			import com.sinusgear.events.SceneEvent;
 			import com.sinusgear.scenes.SampleScene;
 			
 			import flash.net.navigateToURL;
@@ -23,6 +25,9 @@
 			
 			[Bindable]
 			public var scene:SampleScene;
+			
+			[Bindable]
+			public var colladaDataText:String;
 			
 			protected function appCreationCompleteHandler(event:FlexEvent):void
 			{
@@ -133,21 +138,35 @@
 					  </scene>
 					</COLLADA>
 				
-				this.colladaData.text = xData.toString();
+				this.colladaDataText = xData.toString();
 				this.scene = new SampleScene();
+				this.scene.addEventListener(SceneEvent.SCENE_READY, this.sceneReadyHandler);
 				//this.container.rawChildren.addChild(scene);
 				this.container.addChild(scene);
 				
 				
-				// Defer loading of data until redraw
-				callLater(this.refreshButton_clickHandler);
+			}
+			
+			/**
+			 * 3D scene is ready, prepare models.
+			 */
+			public function sceneReadyHandler(event:SceneEvent):void
+			{
+				this.scene.removeEventListener(SceneEvent.SCENE_READY, this.sceneReadyHandler);
+				
+				this.refreshButton_clickHandler();
+				this.orbitToggleButtonChangeHandler(null);
 			}
 			
 			
 			protected function refreshButton_clickHandler(event:MouseEvent = null):void
 			{
+				if (!this.scene.camera)
+				{
+					callLater(this.refreshButton_clickHandler);
+				}
 				this.scene.controlObject = this.scene.camera;
-				this.scene.loadData(this.colladaData.text);
+				this.scene.loadData(this.colladaDataText);
 			}
 			
 			
@@ -201,6 +220,13 @@
 				{
 					this.scene.controlObject = this.scene.focusBox;
 				} else {
+					
+					if (!this.nodeList)
+					{
+						this.scene.controlObject = this.scene.camera;
+						return
+					}
+					
 					if (this.nodeList.selectedItem)
 					{
 						this.scene.controlObject = this.nodeList.selectedItem;
@@ -229,6 +255,17 @@
 				
 			}
 			
+			protected function changeStateButton_clickHandler(event:MouseEvent):void
+			{
+				if (this.currentState == "full")
+				{
+					this.currentState = "collapsed"; 
+				} else {
+					this.currentState = "full";
+				}
+				
+			}
+			
 		]]>
 	</fx:Script>
 
@@ -236,6 +273,11 @@
 		<s:VerticalLayout />
 	</s:layout>
 	
+	
+	<s:states>
+		<s:State name="collapsed" />
+		<s:State name="full"/>
+	</s:states>
 		
 	<!-- 
 	In MX architecure there was mx:Canvas which is no longer available in Spark.
@@ -244,29 +286,31 @@
 	<s:SpriteVisualElement id="container" width="100%" height="100%"  />
 	
 	
-	<s:Group width="100%" height="100%">
+	<s:Group width="100%" height="100%" includeIn="full">
 		<s:layout>
-			<s:HorizontalLayout />
+			<s:VerticalLayout />
 		</s:layout>
-		<s:Group width="100%" height="100%"
+		<s:Group width="100%" minHeight="50"
 				 visible="{this.colladaToggleButton.selected}"
 				 includeInLayout="{this.colladaToggleButton.selected}">
 			<s:layout>
 				<s:VerticalLayout />
 			</s:layout>
 			
-			<s:TextArea id="colladaData" width="100%" height="100%" fontFamily="Courier New"
+			<s:TextArea id="colladaData" width="100%" minHeight="100" maxHeight="400" fontFamily="Courier New"
+						text="@{this.colladaDataText}"
 						/>
 			
 			<s:Button id="refreshButton" label="Refresh" click="refreshButton_clickHandler(event)" />
 		</s:Group>
 		
-		<s:Group height="100%">
+		<s:Group height="100%" includeIn="full" width="100%">
 			<s:layout>
 				<s:VerticalLayout />
 			</s:layout>
 			<s:Label text="Nodes" />
 			<s:List id="nodeList" dataProvider="{this.scene.nodes}" height="100%"
+					width="100%" maxWidth="300"
 					labelField="name"
 					change="nodeList_changeHandler(event)"/>
 			<controls:SparkColorPicker id="colorPicker" 
@@ -280,7 +324,7 @@
 		</s:Group>
 	</s:Group>
 	
-	<s:ToggleButton id="orbitToggleButton" selected="false"
+	<s:ToggleButton id="orbitToggleButton" selected="true"
 					change="orbitToggleButtonChangeHandler(event)"
 					label="Orbit"/>
 	
@@ -304,10 +348,17 @@
 				   change="scaleSlider_changeHandler(event)"
 				   value="200"/>
 		<s:Spacer width="100%" />
-		<s:Label text="Collajader - Georgik.SinusGear.com - v:0.4" 
-				 id="advertisingLabel" click="advertisingLabel_clickHandler(event)"
-				 buttonMode="true"/>
+		
 		
 	</s:Group>
+	
+	<s:Button id="changeStateButton"
+					label.collapsed="Show controls"
+					label.full="Hide controls"
+					click="changeStateButton_clickHandler(event)"/>
+	
+	<s:Label text="Collajader - Georgik.SinusGear.com - v:0.4" 
+			 id="advertisingLabel" click="advertisingLabel_clickHandler(event)"
+			 buttonMode="true"/>
 
 </s:Group>

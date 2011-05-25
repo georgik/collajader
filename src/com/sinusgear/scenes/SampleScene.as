@@ -12,6 +12,8 @@ package com.sinusgear.scenes
 	import alternativa.engine3d.objects.Mesh;
 	import alternativa.engine3d.primitives.Box;
 	
+	import com.sinusgear.events.SceneEvent;
+	
 	import flash.display.BitmapData;
 	import flash.display.Scene;
 	import flash.display.Sprite;
@@ -28,6 +30,7 @@ package com.sinusgear.scenes
 	
 	public class SampleScene extends Sprite
 	{
+		[Event(name="sceneReady",type="com.sinusgear.events.SceneEvent")]
 		
 		public var data:XML;
 		public function SampleScene()
@@ -76,6 +79,10 @@ package com.sinusgear.scenes
 			this.controller = new SimpleObjectController(this.parent, this.focusBox, 200);
 			
 			this.addEventListener(Event.ENTER_FRAME, this.enterFrameHandler);
+			
+			var sceneEvent:SceneEvent = new SceneEvent(SceneEvent.SCENE_READY);
+			this.dispatchEvent(sceneEvent);
+			
 		}
 		
 		[Bindable]

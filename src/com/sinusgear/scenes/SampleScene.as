@@ -23,8 +23,6 @@ package com.sinusgear.scenes
 	import flash.sampler.NewObjectSample;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Image;
-	import mx.controls.Text;
 	import mx.core.UIComponent;
 	
 	public class SampleScene extends Sprite

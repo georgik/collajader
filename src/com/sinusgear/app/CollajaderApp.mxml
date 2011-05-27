@@ -201,6 +201,7 @@
 			protected function nodeList_changeHandler(event:IndexChangeEvent):void
 			{
 				this.scene.deselectAll();
+				this.orbitToggleButton.selected = false;
 				//this.focusToggle_changeHandler();
 				if (this.nodeList.selectedItem)
 				{

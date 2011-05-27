@@ -425,7 +425,7 @@
 					label.full="Hide controls"
 					click="changeStateButton_clickHandler(event)"/>
 	
-	<s:Label text="Collajader - Georgik.SinusGear.com - v:0.4" 
+	<s:Label text="Collajader - Georgik.SinusGear.com - v:0.5" 
 			 id="advertisingLabel" click="advertisingLabel_clickHandler(event)"
 			 buttonMode="true"/>
 

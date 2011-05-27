@@ -109,6 +109,11 @@ package com.sinusgear.scenes
 			this.controller.object = obj;
 		}
 		
+		public function get controlObject():Object3D
+		{
+			return this.controller.object;
+		}
+		
 		public var glowFilter:GlowFilter = new  GlowFilter(0x904020);
 		
 		public function highlight(obj:Object3D):void

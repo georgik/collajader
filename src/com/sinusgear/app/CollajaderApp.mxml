@@ -17,6 +17,7 @@
 			import com.sinusgear.scenes.SampleScene;
 			
 			import flash.net.navigateToURL;
+			import flash.sensors.Accelerometer;
 			
 			import mx.effects.effectClasses.ZoomInstance;
 			import mx.events.FlexEvent;
@@ -266,6 +267,52 @@
 				
 			}
 			
+			public var accelerometer:Accelerometer = null;
+			
+			protected function accelerometerButton_clickHandler(event:MouseEvent):void
+			{
+				if (!Accelerometer.isSupported)
+				{
+					return;
+				}
+				
+				if (!this.accelerometer)
+				{
+					this.accelerometer = new Accelerometer();
+					this.accelerometer.addEventListener(AccelerometerEvent.UPDATE, this.updateAccelerometerHandler);
+				} else {
+					this.accelerometer.removeEventListener(AccelerometerEvent.UPDATE, this.updateAccelerometerHandler);
+					this.accelerometer = null;
+				}
+				
+			}
+			
+			protected function updateAccelerometerHandler(event:AccelerometerEvent):void
+			{
+				if (!this.scene.controlObject)
+				{
+					return;
+				}
+				
+				var accX:Number = event.accelerationX;
+				var accY:Number = event.accelerationY;
+				var accZ:Number = event.accelerationZ;
+				
+				if ((accX<0.2) && (accY<0.2) && (accZ>0.2))
+				{
+					return;
+				}
+				
+				/*this.scene.controlObject.rotationY += accX;
+				this.scene.controlObject.rotationX += accY;
+				this.scene.controlObject.rotationZ += accZ;*/
+				
+				this.scene.controlObject.x = accX * 1000;
+				this.scene.controlObject.y = accY * 1000;
+				this.scene.controlObject.z = accZ * 1000;
+				
+			}
+			
 		]]>
 	</fx:Script>
 
@@ -311,22 +358,42 @@
 			<s:Label text="Nodes" />
 			<s:List id="nodeList" dataProvider="{this.scene.nodes}" height="100%"
 					width="100%" maxWidth="300"
+					minHeight="120"
 					labelField="name"
 					change="nodeList_changeHandler(event)"/>
-			<controls:SparkColorPicker id="colorPicker" 
-									   skinClass="com.adobe.controls.ColorPickerListSkin"
-									   change="colorPicker_changeHandler(event)"
-									   enabled="{this.nodeList.selectedItem}"/>
-			<s:Button id="unselectButton" label="Unselect" 
-							click="unselectButtonClickHandler(event)"/>
-			<s:ToggleButton id="colladaToggleButton" selected="false"
-							label="XML editor"/>
+			
+			<s:Group>
+				<s:layout>
+					<s:HorizontalLayout />
+				</s:layout>
+				
+				<s:Label text="Color " />
+				
+				<controls:SparkColorPicker id="colorPicker" 
+										   skinClass="com.adobe.controls.ColorPickerListSkin"
+										   change="colorPicker_changeHandler(event)"
+										   enabled="{this.nodeList.selectedItem}"
+										   width="90" height="45"/>
+			</s:Group>
+			<s:Group>
+				<s:layout>
+					<s:HorizontalLayout />
+				</s:layout>
+				
+				<s:Button id="unselectButton" label="Unselect"
+						  click="unselectButtonClickHandler(event)"/>
+				
+				<s:Button id="accelerometerButton" label="Accel."
+						  click="accelerometerButton_clickHandler(event)" />
+			</s:Group>
+			<s:CheckBox id="colladaToggleButton"  label="XML editor"
+							selected="false"/>
 		</s:Group>
 	</s:Group>
 	
-	<s:ToggleButton id="orbitToggleButton" selected="true"
-					change="orbitToggleButtonChangeHandler(event)"
-					label="Orbit"/>
+	<s:CheckBox id="orbitToggleButton" label="Orbit"
+					change="orbitToggleButtonChangeHandler(event)" selected="true"
+					/>
 	
 	<s:Group width="100%">
 		<s:layout>

@@ -50,6 +50,7 @@ package com.sinusgear.scenes
 		public var vector:Vector3D = new Vector3D();
 		public var focusBox:Box;
 		
+		public var defaultMaterial:FillMaterial = new FillMaterial(0xff6600)
 		
 		public function init(event:Event):void
 		{
@@ -68,7 +69,7 @@ package com.sinusgear.scenes
 			//camera.view.hideLogo();
 			
 			this.focusBox = new Box();
-			var material:FillMaterial = new FillMaterial(0x909090);
+			var material:FillMaterial = this.defaultMaterial;
 			focusBox.setMaterialToAllFaces(material);
 			//container.addChild(box);
 
@@ -143,8 +144,13 @@ package com.sinusgear.scenes
 			}
 		}
 		
+		/**
+		 * Clean scene, build scene from description.
+		 * Set default color to meshes.
+		 */
 		public function loadData(textData:String):void
 		{
+			var mesh:Mesh;
 			for each (var oldChild:Object3D in this.nodes)
 			{
 				container.removeChild(oldChild);
@@ -158,6 +164,12 @@ package com.sinusgear.scenes
 				this.scaleObject(child);
 				this.nodes.addItem(child);
 				container.addChild(child);
+				
+				mesh = child as Mesh;
+				if (mesh)
+				{
+					mesh.setMaterialToAllFaces(this.defaultMaterial);
+				}
 				
 			}
 

@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" title="Collajader" xmlns:app="com.sinusgear.app.*"
+		addedToStage="view_creationCompleteHandler(event)"
+		currentState="draw"
 		>
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private function _onKeyDown(event:KeyboardEvent):void 
+			{
+				if(event.keyCode == Keyboard.MENU) {
+					event.preventDefault();
+					if (this.currentState == "draw")
+					{
+						this.currentState = "menu";
+					} else {
+						this.currentState = "draw";
+					}
+				}
+			}
+			
+			protected function view_creationCompleteHandler(event:Event):void
+			{
+				
+				stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+				
+			}
+			
+			private function onFileSelect(event:Event):void {
+				var file:File = File(event.currentTarget);
+				
+				var stream:FileStream = new FileStream()
+				stream.open(file, FileMode.READ);
+				
+				var colladaData:String = stream.readUTFBytes(stream.bytesAvailable);
+				this.collajaderApp.loadColladaString(colladaData); 
+				stream.close();
+				
+				this.currentState = "draw";
+				
+			}
+			
+			protected function openColladaButton_clickHandler(event:MouseEvent):void
+			{
+				var file:File = new File();
+				file.addEventListener(Event.SELECT, onFileSelect);
+				file.browseForOpen("Open");
+			}
+			
+		]]>
+	</fx:Script>
 	
-	<s:Scroller width="100%" height="100%">
+	<s:states>
+		<s:State name="draw" />
+		<s:State name="menu" />
+	</s:states>
+	
+	
+	<s:Scroller width="100%" height="100%" includeIn="draw">
 		
 		<app:CollajaderApp id="collajaderApp" width="100%"  height="100%"
 						   currentState="collapsed"/>
 	</s:Scroller>
+	
+	<s:Group includeIn="menu" x="0" bottom="0">
+		<s:Button label="Open Collada" 
+				  id="openColladaButton"
+				  click="openColladaButton_clickHandler(event)"/>
+	</s:Group>
+	
 </s:View>

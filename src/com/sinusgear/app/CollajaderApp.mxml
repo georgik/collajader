@@ -167,7 +167,17 @@
 					callLater(this.refreshButton_clickHandler);
 				}
 				this.scene.controlObject = this.scene.camera;
+				
 				this.scene.loadData(this.colladaDataText);
+			}
+			
+			/**
+			 * Load Collada from string.
+			 */
+			public function loadColladaString(data:String):void
+			{
+				this.scene.loadData(data);
+				this.scene.controlObject = this.scene.camera;
 			}
 			
 			
@@ -180,9 +190,12 @@
 			protected function scaleSlider_changeHandler(event:Event):void
 			{
 				this.scene.scaleFactor = this.scaleSlider.value;
-				if (this.nodeList.selectedItem)
+				if (this.nodeList)
 				{
-					this.scene.scaleObject(this.nodeList.selectedItem);
+					if (this.nodeList.selectedItem)
+					{
+						this.scene.scaleObject(this.nodeList.selectedItem);
+					}
 				}
 			}
 			
@@ -374,6 +387,7 @@
 										   skinClass="com.adobe.controls.ColorPickerListSkin"
 										   change="colorPicker_changeHandler(event)"
 										   enabled="{this.nodeList.selectedItem}"
+										   selectedItem="0xff6600"
 										   width="90" height="45"/>
 			</s:Group>
 			<s:Group>

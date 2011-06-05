@@ -6,8 +6,10 @@ package com.sinusgear.scenes
 	import alternativa.engine3d.core.Object3D;
 	import alternativa.engine3d.core.Vertex;
 	import alternativa.engine3d.core.View;
+	import alternativa.engine3d.loaders.MaterialLoader;
 	import alternativa.engine3d.loaders.ParserCollada;
 	import alternativa.engine3d.materials.FillMaterial;
+	import alternativa.engine3d.materials.FlatShadingMaterial;
 	import alternativa.engine3d.materials.TextureMaterial;
 	import alternativa.engine3d.objects.Mesh;
 	import alternativa.engine3d.primitives.Box;
@@ -166,12 +168,11 @@ package com.sinusgear.scenes
 				container.addChild(child);
 				
 				mesh = child as Mesh;
-				if (mesh)
-				{
-					mesh.setMaterialToAllFaces(this.defaultMaterial);
-				}
 				
 			}
+			
+			var materialLoader:MaterialLoader = new MaterialLoader();
+			materialLoader.load(parser.textureMaterials)
 
 		}
 		

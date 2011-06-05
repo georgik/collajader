@@ -8,6 +8,7 @@ package com.sinusgear.scenes
 	import alternativa.engine3d.core.View;
 	import alternativa.engine3d.lights.AmbientLight;
 	import alternativa.engine3d.loaders.MaterialLoader;
+	import alternativa.engine3d.loaders.Parser3DS;
 	import alternativa.engine3d.loaders.ParserCollada;
 	import alternativa.engine3d.materials.FillMaterial;
 	import alternativa.engine3d.materials.FlatShadingMaterial;
@@ -155,7 +156,7 @@ package com.sinusgear.scenes
 		 * Clean scene, build scene from description.
 		 * Set default color to meshes.
 		 */
-		public function loadData(textData:String):void
+		public function loadData(data:Object, locationPrefix:String = "", binary:Boolean = false):void
 		{
 			var mesh:Mesh;
 			for each (var oldChild:Object3D in this.nodes)
@@ -164,9 +165,19 @@ package com.sinusgear.scenes
 			}
 			this.nodes.removeAll();
 			
-			var parser:ParserCollada = new ParserCollada();
-			parser.parse(XML(textData));
-			for each (var child:Object3D in parser.hierarchy)
+			var parser:Object;
+			
+			if (binary)
+			{
+				parser = new Parser3DS();
+				parser.parse(data, locationPrefix);
+			} else {
+				var textData:String = data as String;
+				parser = new ParserCollada();
+				parser.parse(XML(textData), locationPrefix);
+			}
+			
+			for each (var child:Object3D in parser.objects)
 			{
 				this.scaleObject(child);
 				this.nodes.addItem(child);
@@ -181,9 +192,6 @@ package com.sinusgear.scenes
 				}
 				
 			}
-			
-			/*var ambientLight:AmbientLight = new AmbientLight(0x181824);
-			container.addChild(ambientLight);*/
 			
 			var materialLoader:MaterialLoader = new MaterialLoader();
 			materialLoader.load(parser.textureMaterials)

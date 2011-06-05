@@ -327,6 +327,34 @@
 				
 			}
 			
+			private var urlLoader:URLLoader;
+			
+			public function urlLoaderCompleteHandler(event:Event):void
+			{
+				this.urlLoader.removeEventListener(Event.COMPLETE, this.urlLoaderCompleteHandler);
+				var prefix:String = this.fileUrl.text;
+				var slashField:Array = prefix.split("/");
+				
+				prefix = prefix.substr(0,prefix.length-slashField[slashField.length-1].length);
+				
+				this.scene.loadData((event.target as URLLoader).data, prefix, true);
+			}
+			
+			public function loadUrl(urlString:String):void
+			{
+				this.urlLoader = new URLLoader();
+				this.urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+				this.urlLoader.load(new URLRequest(urlString));
+				this.urlLoader.addEventListener(Event.COMPLETE, this.urlLoaderCompleteHandler);
+				
+			}
+			
+			protected function openFile_clickHandler(event:MouseEvent):void
+			{
+				this.loadUrl(this.fileUrl.text);
+				
+			}
+			
 		]]>
 	</fx:Script>
 
@@ -434,10 +462,22 @@
 		
 	</s:Group>
 	
-	<s:Button id="changeStateButton"
-					label.collapsed="Show controls"
-					label.full="Hide controls"
-					click="changeStateButton_clickHandler(event)"/>
+	<s:Group width="100%" >
+
+		<s:layout>
+			<s:HorizontalLayout />
+		</s:layout>
+		<s:Button id="changeStateButton"
+						label.collapsed="Show controls"
+						label.full="Hide controls"
+						click="changeStateButton_clickHandler(event)"/>
+		
+		<s:TextInput id="fileUrl" 
+					 text="http://georgik.sinusgear.com/wp-content/flex/collajader/0.5/models/test.3ds"/>
+		<s:Button id="openFile"
+				  label="Open"
+				  click="openFile_clickHandler(event)" />
+	</s:Group>
 	
 	<s:Label text="Collajader - Georgik.SinusGear.com - v:0.5" 
 			 id="advertisingLabel" click="advertisingLabel_clickHandler(event)"

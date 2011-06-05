@@ -6,6 +6,7 @@ package com.sinusgear.scenes
 	import alternativa.engine3d.core.Object3D;
 	import alternativa.engine3d.core.Vertex;
 	import alternativa.engine3d.core.View;
+	import alternativa.engine3d.lights.AmbientLight;
 	import alternativa.engine3d.loaders.MaterialLoader;
 	import alternativa.engine3d.loaders.ParserCollada;
 	import alternativa.engine3d.materials.FillMaterial;
@@ -60,9 +61,10 @@ package com.sinusgear.scenes
 			stage.align = StageAlign.TOP_LEFT;
 
 			
-			
 			camera.view = new View(800,400);
+			
 			this.addChild(camera.view);
+			this.addChild(camera.diagram);
 			camera.x = -900;
 			camera.y = -950;
 			camera.z = 100;
@@ -96,6 +98,9 @@ package com.sinusgear.scenes
 			child.scaleX = this.scaleFactor;
 			child.scaleY = this.scaleFactor;
 			child.scaleZ = this.scaleFactor;
+			child.x = child.x*this.scaleFactor;
+			child.y = child.y*this.scaleFactor;
+			child.z = child.z*this.scaleFactor;
 			
 		}
 		
@@ -169,7 +174,16 @@ package com.sinusgear.scenes
 				
 				mesh = child as Mesh;
 				
+				if (mesh)
+				{
+					/*mesh.weldVertices();
+					mesh.weldFaces();*/
+				}
+				
 			}
+			
+			/*var ambientLight:AmbientLight = new AmbientLight(0x181824);
+			container.addChild(ambientLight);*/
 			
 			var materialLoader:MaterialLoader = new MaterialLoader();
 			materialLoader.load(parser.textureMaterials)
